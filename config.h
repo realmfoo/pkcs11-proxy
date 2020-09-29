@@ -38,4 +38,12 @@ static inline int inet_aton(const char * cp, struct in_addr *pin)
 
 #endif
 
+#define CK_PTR *
+#define CK_DECLARE_FUNCTION(returnType, name) \
+    returnType name
+#define CK_DECLARE_FUNCTION_POINTER(returnType, name) \
+   returnType (* name)
+#define CK_CALLBACK_FUNCTION(returnType, name) \
+   returnType (* name)
+
 #endif	/* CONFIG_H */

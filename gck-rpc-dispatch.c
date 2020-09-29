@@ -27,7 +27,6 @@
 #include "gck-rpc-private.h"
 
 #include "pkcs11/pkcs11.h"
-#include "pkcs11/pkcs11g.h"
 #include "pkcs11/pkcs11i.h"
 
 #include <sys/types.h>

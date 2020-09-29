@@ -26,7 +26,9 @@
 #include "gck-rpc-layer.h"
 #include "gck-rpc-private.h"
 
+#pragma pack(push, cryptoki, 1)
 #include "pkcs11/pkcs11.h"
+#pragma pack(pop, cryptoki)
 
 #include <sys/types.h>
 #include <sys/param.h>
