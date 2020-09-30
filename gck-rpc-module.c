@@ -31,35 +31,61 @@
 #pragma pack(pop, cryptoki)
 
 #include <sys/types.h>
-#include <sys/param.h>
-#ifdef __MINGW32__
-# include <winsock2.h>
+#ifdef _WINDOWS
+#include <windows.h>
+//#include <winsock2.h>
+
+#define MAXPATHLEN 1024
+typedef int pid_t;
+
 #else
-# include <sys/socket.h>
-# include <sys/un.h>
+#include <sys/param.h>
+#include <sys/socket.h>
+#include <sys/un.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
+#include <pthread.h>
+#include <unistd.h>
 #endif
 
 #include <stdlib.h>
 #include <limits.h>
 #include <ctype.h>
 #include <stdint.h>
-#include <pthread.h>
-#include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
 
+#ifdef _WINDOWS
+#define MUTEX_LOCK(mx) 	if (mx == NULL) { \
+	  HANDLE p = CreateMutexW(NULL, FALSE, NULL); \
+      debug(("created mutex")); \
+	  if (InterlockedCompareExchangePointer((PVOID*)&mx, (PVOID)p, NULL) != NULL) { \
+		CloseHandle(p); \
+	  } \
+	} \
+	while (WaitForSingleObject(mx, 0) == WAIT_TIMEOUT)
+#define MUTEX_UNLOCK(mx) ReleaseMutex(mx)
+#else
+#define MUTEX_CALL(mx) pthread_mutex_lock(&mx)
+#define MUTEX_UNLOCK(mx) pthread_mutex_unlock(&mx)
+#endif
+
+#undef CreateMutex
+
 /* -------------------------------------------------------------------
  * GLOBALS / DEFINES
  */
 
 /* Various mutexes */
+#ifdef _WINDOWS
+static HANDLE init_mutex = NULL;
+#else
 static pthread_mutex_t init_mutex = PTHREAD_MUTEX_INITIALIZER;
+#endif
 
 /* Whether we've been initialized, and on what process id it happened */
 static int pkcs11_initialized = 0;
@@ -199,7 +225,11 @@ enum CallStatus {
 };
 
 typedef struct _CallState {
+#ifdef _WINDOWS
+	SOCKET socket;		/* The connection we're sending on */
+#else
 	int socket;		/* The connection we're sending on */
+#endif
 	GckRpcMessage *req;	/* The current request */
 	GckRpcMessage *resp;	/* The current response */
 	int call_status;
@@ -214,7 +244,11 @@ static CallState *call_state_pool = NULL;
 static unsigned int n_call_state_pool = 0;
 
 /* Mutex to protect above call state list */
+#ifdef _WINDOWS
+static HANDLE call_state_mutex = NULL;
+#else
 static pthread_mutex_t call_state_mutex = PTHREAD_MUTEX_INITIALIZER;
+#endif
 
 /* Allocator for call session buffers */
 static void *call_allocator(void *p, size_t sz)
@@ -229,10 +263,14 @@ static void call_disconnect(CallState * cs)
 {
 	assert(cs);
 
-	if (cs->socket != -1) {
+	if (cs->socket != INVALID_SOCKET) {
 		debug(("disconnected socket"));
+#ifdef _WINDOWS
+		closesocket(cs->socket);
+#else
 		close(cs->socket);
-		cs->socket = -1;
+#endif
+		cs->socket = INVALID_SOCKET;
 	}
 }
 
@@ -317,7 +355,7 @@ static CK_RV call_read(CallState * cs, unsigned char *data, size_t len)
 static CK_RV call_connect(CallState * cs)
 {
 	struct sockaddr_un addr;
-	int sock;
+	SOCKET sock;
 
 	assert(cs);
 	assert(cs->socket == -1);
@@ -345,30 +383,54 @@ static CK_RV call_connect(CallState * cs)
 		*p = '\0';
 		port = strtol(p + 1, NULL, 0);
 
-		sock = socket(AF_INET, SOCK_STREAM, 0);
+#ifdef _WINDOWS
+		WSADATA wsaData;
 
-		if (sock < 0) {
+		int err = WSAStartup(MAKEWORD(2, 2), &wsaData);
+		if (err != NO_ERROR) {
+			gck_rpc_warn("couldn't create pkcs11 socket: %d", err);
+			return CKR_DEVICE_ERROR;
+		}
+#endif;
+
+		sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+		if (sock == INVALID_SOCKET) {
+#ifdef _WINDOWS
+			gck_rpc_warn("couldn't create pkcs11 socket: %d", 
+				WSAGetLastError());
+#else
 			gck_rpc_warn("couldn't create pkcs11 socket: %s",
-				     strerror(errno));
+				strerror(errno));
+#endif
 			return CKR_DEVICE_ERROR;
 		}
 
-		if (setsockopt(sock, IPPROTO_TCP, TCP_NODELAY,
-			       (char *)&one, sizeof(one)) == -1) {
-			gck_rpc_warn
-			    ("couldn't create set pkcs11 socket options : %s",
-			     strerror(errno));
-			return CKR_DEVICE_ERROR;
-		}
+		//debug(("set nodelay"));
 
-		addr.sun_family = AF_INET;
-		if (inet_aton(ip, &((struct sockaddr_in *)&addr)->sin_addr) ==
-		    0) {
-			gck_rpc_warn("bad inet address : %s", ip);
-			return CKR_DEVICE_ERROR;
-		}
+		//if (setsockopt(sock, IPPROTO_TCP, TCP_NODELAY,
+		//	       (char *)&one, sizeof(one)) == -1) {
+		//	gck_rpc_warn
+		//	    ("couldn't create set pkcs11 socket options : %s",
+		//	     strerror(errno));
+		//	return CKR_DEVICE_ERROR;
+		//}
+
+		debug(("ip: %s", ip));
+		((struct sockaddr_in*)&addr)->sin_family = AF_INET;
+		//if (inet_pton(ip, &((struct sockaddr_in *)&addr)->sin_addr) == 0) {
+		//	gck_rpc_warn("bad inet address : %s", ip);
+		//	return CKR_DEVICE_ERROR;
+		//}
+		((struct sockaddr_in*)&addr)->sin_addr.s_addr = inet_addr("192.168.1.50");
+		debug(("port: %d", port));
 		((struct sockaddr_in *)&addr)->sin_port = htons(port);
+
+		
 	} else {
+#ifdef _WINDOWS
+		warning(("couldn't open socket: %s", strerror(errno)));
+		return CKR_DEVICE_ERROR;
+#else
 		addr.sun_family = AF_UNIX;
 		strncpy(addr.sun_path, pkcs11_socket_path,
 			sizeof(addr.sun_path));
@@ -378,21 +440,28 @@ static CK_RV call_connect(CallState * cs)
 			warning(("couldn't open socket: %s", strerror(errno)));
 			return CKR_DEVICE_ERROR;
 		}
+#endif
 	}
 
-#ifndef __MINGW32__
+#ifndef _WINDOWS
         /* close on exec */
 	if (fcntl(sock, F_SETFD, 1) == -1) {
-		close(sock);
 		warning(("couldn't secure socket: %s", strerror(errno)));
+		close(sock);
 		return CKR_DEVICE_ERROR;
 	}
 #endif
 
-	if (connect(sock, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
-		close(sock);
+	if (connect(sock, (struct sockaddr *)&addr, sizeof(addr)) == SOCKET_ERROR) {
+#ifdef _WINDOWS
+		warning(("couldn't connect to: %s: %d", pkcs11_socket_path,
+			WSAGetLastError()));
+		closesocket(sock);
+#else
 		warning(("couldn't connect to: %s: %s", pkcs11_socket_path,
 			 strerror(errno)));
+		close(sock);
+#endif
 		return CKR_DEVICE_ERROR;
 	}
 
@@ -428,7 +497,7 @@ static CK_RV call_lookup(CallState ** ret)
 
 	assert(ret);
 
-	pthread_mutex_lock(&call_state_mutex);
+	MUTEX_LOCK(call_state_mutex);
 
 	/* Pop one from the pool if possible */
 	if (call_state_pool != NULL) {
@@ -439,7 +508,7 @@ static CK_RV call_lookup(CallState ** ret)
 		--n_call_state_pool;
 	}
 
-	pthread_mutex_unlock(&call_state_mutex);
+	MUTEX_UNLOCK(call_state_mutex);
 
 	if (cs == NULL) {
 		cs = calloc(1, sizeof(CallState));
@@ -655,7 +724,7 @@ static CK_RV call_done(CallState * cs, CK_RV ret)
 	    && cs->socket != -1) {
 
 		/* Try and stash it away for later use */
-		pthread_mutex_lock(&call_state_mutex);
+		MUTEX_LOCK(call_state_mutex);
 
 		if (n_call_state_pool < MAX_CALL_STATE_POOL) {
 			cs->call_status = CALL_READY;
@@ -666,7 +735,7 @@ static CK_RV call_done(CallState * cs, CK_RV ret)
 			cs = NULL;
 		}
 
-		pthread_mutex_unlock(&call_state_mutex);
+		MUTEX_UNLOCK(call_state_mutex);
 	}
 
 	if (cs != NULL)
@@ -882,6 +951,8 @@ proto_read_ulong_array(GckRpcMessage * msg, CK_ULONG_PTR arr,
 		return PARSE_ERROR;
 
 	*len = num;
+
+	debug(("read %d items", num));
 
 	/* If not valid, then just the length is encoded, this can signify CKR_BUFFER_TOO_SMALL */
 	if (!valid) {
@@ -1195,7 +1266,9 @@ static CK_RV rpc_C_Initialize(CK_VOID_PTR init_args)
 	GCK_RPC_CHECK_CALLS();
 #endif
 
-	pthread_mutex_lock(&init_mutex);
+	debug(("C_Initialize: before lock"));
+	MUTEX_LOCK(init_mutex);
+	debug(("C_Initialize: after lock"));
 
 	if (init_args != NULL) {
 		int supplied_ok;
@@ -1294,7 +1367,7 @@ done:
 		pkcs11_socket_path[0] = 0;
 	}
 
-	pthread_mutex_unlock(&init_mutex);
+	MUTEX_UNLOCK(init_mutex);
 
 	debug(("C_Initialize: %d", ret));
 	return ret;
@@ -1309,7 +1382,7 @@ static CK_RV rpc_C_Finalize(CK_VOID_PTR reserved)
 	return_val_if_fail(pkcs11_initialized, CKR_CRYPTOKI_NOT_INITIALIZED);
 	return_val_if_fail(!reserved, CKR_ARGUMENTS_BAD);
 
-	pthread_mutex_lock(&init_mutex);
+	MUTEX_LOCK(init_mutex);
 
 	ret = call_lookup(&cs);
 	if (ret == CKR_OK) {
@@ -1328,7 +1401,11 @@ static CK_RV rpc_C_Finalize(CK_VOID_PTR reserved)
 	pkcs11_initialized_pid = 0;
 	pkcs11_socket_path[0] = 0;
 
+#ifdef _WINDOWS
+	ReleaseMutex(init_mutex);
+#else
 	pthread_mutex_unlock(&init_mutex);
+#endif
 
 	debug(("C_Finalize: %d", CKR_OK));
 	return CKR_OK;
@@ -2192,8 +2269,9 @@ rpc_C_GenerateRandom(CK_SESSION_HANDLE session, CK_BYTE_PTR random_data,
  * is compiled.
  */
 
+#pragma pack(push, cryptoki, 1)
 static CK_FUNCTION_LIST functionList = {
-	{CRYPTOKI_VERSION_MAJOR, CRYPTOKI_VERSION_MINOR},	/* version */
+	{(CK_BYTE)CRYPTOKI_VERSION_MAJOR, (CK_BYTE)CRYPTOKI_VERSION_MINOR},	/* version */
 	rpc_C_Initialize,
 	rpc_C_Finalize,
 	rpc_C_GetInfo,
@@ -2263,9 +2341,11 @@ static CK_FUNCTION_LIST functionList = {
 	rpc_C_CancelFunction,
 	rpc_C_WaitForSlotEvent
 };
+#pragma pack(pop, cryptoki)
 
 CK_RV C_GetFunctionList(CK_FUNCTION_LIST_PTR_PTR list)
 {
+	printf("C_GetFunctionList\n");
 	return_val_if_fail(list, CKR_ARGUMENTS_BAD);
 
 	*list = &functionList;

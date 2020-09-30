@@ -277,14 +277,17 @@ gck_rpc_message_write_attribute_array(GckRpcMessage * msg,
 
 		/* The attribute length and value */
 		if (validity) {
-			egg_buffer_add_uint32(&msg->buffer, attr->ulValueLen);
 			if (gck_rpc_has_bad_sized_ulong_parameter(attr)) {
 				uint64_t val = *(CK_ULONG *)attr->pValue;
 
+				egg_buffer_add_uint32(&msg->buffer, sizeof (val));
 				egg_buffer_add_byte_array (&msg->buffer, (unsigned char *)&val, sizeof (val));
-			} else
+			}
+			else {
+				egg_buffer_add_uint32(&msg->buffer, attr->ulValueLen);
 				egg_buffer_add_byte_array(&msg->buffer, attr->pValue,
-							  attr->ulValueLen);
+					attr->ulValueLen);
+			}
 		}
 	}
 
