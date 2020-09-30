@@ -27,8 +27,13 @@ enum  {
 #endif
 
 #define CK_PTR *
+#ifdef _WINDOWS
 #define CK_DECLARE_FUNCTION(returnType, name) \
-    __declspec(dllexport) returnType __cdecl name
+   __declspec(dllexport) returnType __cdecl name
+#else
+#define CK_DECLARE_FUNCTION(returnType, name) \
+   returnType __cdecl name
+#endif
 #define CK_DECLARE_FUNCTION_POINTER(returnType, name) \
    returnType (* name)
 #define CK_CALLBACK_FUNCTION(returnType, name) \
