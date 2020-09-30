@@ -1,7 +1,9 @@
 #ifndef GCKRPC_LAYER_H_
 #define GCKRPC_LAYER_H_
 
+#pragma pack(push, cryptoki, 1)
 #include "pkcs11/pkcs11.h"
+#pragma pack(pop, cryptoki)
 
 /* ------------------------------------------------------------------
  * DISPATCHER
