@@ -412,23 +412,29 @@ static CK_RV call_connect(CallState * cs)
 			return CKR_DEVICE_ERROR;
 		}
 
-		//debug(("set nodelay"));
+		debug(("set nodelay"));
 
-		//if (setsockopt(sock, IPPROTO_TCP, TCP_NODELAY,
-		//	       (char *)&one, sizeof(one)) == -1) {
-		//	gck_rpc_warn
-		//	    ("couldn't create set pkcs11 socket options : %s",
-		//	     strerror(errno));
-		//	return CKR_DEVICE_ERROR;
-		//}
+#ifndef _WINDOWS
+		if (setsockopt(sock, IPPROTO_TCP, TCP_NODELAY,
+			       (char *)&one, sizeof(one)) == -1) {
+			gck_rpc_warn
+			    ("couldn't create set pkcs11 socket options : %s",
+			     strerror(errno));
+			return CKR_DEVICE_ERROR;
+		}
+#endif
 
 		debug(("ip: %s", ip));
 		((struct sockaddr_in*)&addr)->sin_family = AF_INET;
-		//if (inet_pton(ip, &((struct sockaddr_in *)&addr)->sin_addr) == 0) {
-		//	gck_rpc_warn("bad inet address : %s", ip);
-		//	return CKR_DEVICE_ERROR;
-		//}
-		((struct sockaddr_in*)&addr)->sin_addr.s_addr = inet_addr("192.168.1.50");
+		int r = inet_pton(AF_INET, ip, &((struct sockaddr_in*)&addr)->sin_addr);
+		if (r != 1) {
+			if (r == 0) {
+				gck_rpc_warn("bad inet address : %s", ip);
+				return CKR_DEVICE_ERROR;
+			}
+			gck_rpc_warn("AF_INET is unsupported");
+			return CKR_DEVICE_ERROR;
+		}
 		debug(("port: %d", port));
 		((struct sockaddr_in *)&addr)->sin_port = htons(port);
 
