@@ -147,6 +147,7 @@ int gck_rpc_mechanism_has_no_parameters(CK_MECHANISM_TYPE mech)
 	case CKM_AES_KEY_GEN:
 	case CKM_AES_ECB:
 	case CKM_AES_MAC:
+	case CKM_AES_CMAC:
 	case CKM_DES_KEY_GEN:
 	case CKM_DES2_KEY_GEN:
 	case CKM_DES3_KEY_GEN:

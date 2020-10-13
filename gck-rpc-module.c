@@ -2282,7 +2282,9 @@ rpc_C_GenerateRandom(CK_SESSION_HANDLE session, CK_BYTE_PTR random_data,
  * is compiled.
  */
 
-//#pragma pack(push, cryptoki, 1)
+#ifdef _WINDOWS
+#pragma pack(push, cryptoki, 1)
+#endif
 static CK_FUNCTION_LIST functionList = {
 	{(CK_BYTE)CRYPTOKI_VERSION_MAJOR, (CK_BYTE)CRYPTOKI_VERSION_MINOR},	/* version */
 	rpc_C_Initialize,
@@ -2354,7 +2356,9 @@ static CK_FUNCTION_LIST functionList = {
 	rpc_C_CancelFunction,
 	rpc_C_WaitForSlotEvent
 };
-//#pragma pack(pop, cryptoki)
+#ifdef _WINDOWS
+#pragma pack(pop, cryptoki)
+#endif
 
 CK_RV C_GetFunctionList(CK_FUNCTION_LIST_PTR_PTR list)
 {
