@@ -8,7 +8,7 @@ project (pkcs11 C)
 
 set(CMAKE_C_STANDARD 99)
 set(PKCS11_PROXY_SRCS gck-rpc-module.c gck-rpc-message.c gck-rpc-util.c egg-buffer.c)
-if (!WIN32)
+if (NOT WIN32)
     set(PKCS11_DAEMON_SRCS egg-buffer.c gck-rpc-daemon-standalone.c gck-rpc-dispatch.c gck-rpc-message.c gck-rpc-util.c)
 endif()
 
@@ -24,7 +24,7 @@ if (WIN32)
   endif()
 endif()
 
-if (!WIN32)
+if (NOT WIN32)
     add_executable (pkcs11-daemon ${GUI_TYPE} ${PKCS11_DAEMON_SRCS})
 endif()
 

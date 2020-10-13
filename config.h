@@ -32,7 +32,7 @@ enum  {
    __declspec(dllexport) returnType __cdecl name
 #else
 #define CK_DECLARE_FUNCTION(returnType, name) \
-   returnType __cdecl name
+   returnType name
 #endif
 #define CK_DECLARE_FUNCTION_POINTER(returnType, name) \
    returnType (* name)
