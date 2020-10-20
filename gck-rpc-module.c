@@ -272,6 +272,9 @@ static void call_disconnect(CallState * cs)
 
 	if (cs->socket != INVALID_SOCKET) {
 		debug(("disconnected socket"));
+		if (-1 == shutdown(cs->socket, SHUT_RDWR)) {
+			warning(("failed to shutdown connection: %s", strerror(errno)));
+		}
 #ifdef _WINDOWS
 		closesocket(cs->socket);
 #else
