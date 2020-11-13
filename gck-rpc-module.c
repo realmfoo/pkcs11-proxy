@@ -401,7 +401,7 @@ static CK_RV call_connect(CallState * cs)
 			gck_rpc_warn("couldn't create pkcs11 socket: %d", err);
 			return CKR_DEVICE_ERROR;
 		}
-#endif;
+#endif
 
 		sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 		if (sock == INVALID_SOCKET) {

@@ -1,3 +1,9 @@
+pkcs11-proxy (0.2) unstable; urgency=low
+
+  * Fix: call shutdown() before closing a socket
+
+ -- Konstantin Leboev <konstantin.leboev@gmail.com>  Fri, 13 Nov 2020 16:26:10 +0300
+
 pkcs11-proxy (0.1) unstable; urgency=low
 
   * Initial release.
