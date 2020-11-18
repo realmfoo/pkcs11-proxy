@@ -12,4 +12,4 @@ arch:
   - amd64
   
 script:
-  - cmake -Bbuild --build . --target install
+  - cmake -Bbuild --build .
