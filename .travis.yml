@@ -13,4 +13,4 @@ arch:
 
 script:
   - cmake -Bbuild --build .
-  - make pkcs11-daemon pkcs11-proxy
+  - cd build && make pkcs11-daemon pkcs11-proxy
