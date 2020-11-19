@@ -36,10 +36,10 @@ else ()
     target_link_libraries(pkcs11-proxy pthread)
     target_link_libraries(pkcs11-daemon dl pthread)
     install(TARGETS pkcs11-proxy
-            DESTINATION /usr/local/lib
+            DESTINATION /usr/lib
             COMPONENT proxy)
     install(TARGETS pkcs11-daemon
-            DESTINATION /usr/local/bin
+            DESTINATION /usr/bin
             COMPONENT daemon)
 
     set(CPACK_SYSTEM_NAME "amd64")
