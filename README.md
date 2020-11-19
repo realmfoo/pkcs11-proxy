@@ -1,3 +1,9 @@
+# PKCS#11 Proxy
+
+[![Travis Build Status](https://api.travis-ci.org/realmfoo/pkcs11-proxy.png)](https://travis-ci.org/realmfoo/pkcs11-proxy)
+
+## Introduction
+
 PKCS11-Proxy is a proxy for the PKCS11-library.
 
 This project is based on a stripped down Gnome Keyring without all gnome
@@ -9,9 +15,11 @@ the crypto it can be isolated from the rest of the system.  Beware:
 the connection is not encrypted and can easily be sniffed.  You should
 use a secure communication-channel, for example stunnel.
 
+## Usage example
+
 Here is an example of using pkcs11-proxy together with SoftHSM (from the
 OpenDNSSEC project).  The benefit of this setup is that no extra hardware
-is needed at all.  This could also be considered the greatest weakeness.
+is needed at all.  This could also be considered the greatest weakness.
 For demonstration purposes, however, security is not a consideration.
 
     $ sudo adduser cgielen pkcs11
