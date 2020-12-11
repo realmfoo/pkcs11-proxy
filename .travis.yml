@@ -6,7 +6,7 @@ git:
 
 dist: focal
 
-osx_image: xcode9.3
+osx_image: xcode10.2
 
 os:
   - linux
@@ -32,4 +32,3 @@ deploy:
     prerelease: true
     on:
       tags: true
-      condition: $TRAVIS_TAG =~ ^v2\.[0-9]+\.[0-9]+-(alpha|beta)\.[0-9]+$
