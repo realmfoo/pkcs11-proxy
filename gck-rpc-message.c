@@ -259,7 +259,7 @@ gck_rpc_message_write_attribute_array(GckRpcMessage * msg,
 	assert(!num || arr);
 	assert(msg);
 
-	/* Make sure this is in the rigth order */
+	/* Make sure this is in the right order */
 	assert(!msg->signature || gck_rpc_message_verify_part(msg, "aA"));
 
 	/* Write the number of items */

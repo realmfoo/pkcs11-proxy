@@ -361,7 +361,7 @@ proto_read_attribute_buffer(CallState * cs, CK_ATTRIBUTE_PTR * result,
 
 	msg = cs->req;
 
-	/* Make sure this is in the rigth order */
+	/* Make sure this is in the right order */
 	assert(!msg->signature || gck_rpc_message_verify_part(msg, "fA"));
 
 	/* Read the number of attributes */
@@ -423,7 +423,7 @@ proto_read_attribute_array(CallState * cs, CK_ATTRIBUTE_PTR * result,
 
 	msg = cs->req;
 
-	/* Make sure this is in the rigth order */
+	/* Make sure this is in the right order */
 	assert(!msg->signature || gck_rpc_message_verify_part(msg, "aA"));
 
 	/* Read the number of attributes */

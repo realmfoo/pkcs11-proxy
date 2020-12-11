@@ -1350,6 +1350,7 @@ static CK_RV rpc_C_Initialize(CK_VOID_PTR init_args)
 					 "%s.pkcs11", path);
 			pkcs11_socket_path[sizeof(pkcs11_socket_path) - 1] = 0;
 		} else {
+			warning(("PKCS11_PROXY_SOCKET is undefined"));
 			ret =  CKR_FUNCTION_NOT_SUPPORTED;
 			goto done;
 		}

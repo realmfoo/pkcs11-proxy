@@ -97,6 +97,7 @@ int gck_rpc_mechanism_has_sane_parameters(CK_MECHANISM_TYPE type)
 	case CKM_RSA_PKCS_OAEP:
 	case CKM_RSA_PKCS_PSS:
 	case CKM_SHA1_RSA_PKCS_PSS:
+	case CKM_AES_CBC_PAD:
 	case CKM_CONCATENATE_BASE_AND_KEY:
 	case CKM_CONCATENATE_BASE_AND_DATA:
 	case CKM_CONCATENATE_DATA_AND_BASE:
