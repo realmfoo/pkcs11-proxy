@@ -6,11 +6,15 @@ git:
 
 dist: focal
 
+osx_image: xcode9.3
+
 os:
   - linux
+  - osx
 
 compiler:
   - gcc
+  - clang
 
 arch:
   - amd64
@@ -22,12 +26,9 @@ script:
 deploy:
   - provider: releases
     skip_cleanup: true
-    api_key:
-      secure: tCfywX/DDoOL4iJmO3Rod/bwc25EO/MrmHvg7X5ZnuF3gkhO819ARcV1VtoUjuT9AE6B3jxGOfGedUkCFx6T2h1AByQEbEmscQQllNfo1/Mbnu5N1cL/kab/YBcCIVKyfNkWDhmBSj+Tz5qJucG2/NnK3TUXAED7ZjvfzBYUWRVzE+8xAabsp5tExVIPmLa1ymqvCt3xPndfihJ+SbrFcaRtOR68Ci9Af1cYmXvZEGu8qjAXShdSaMIh3e10s39oIBcfcC0rBRBAFqMTSjbLhcIfSGxCjw+PBeE+dC3pL/1DhjhXutnnd9YadCz/Ykr01Iqi7QiIhNByOmUcdt6p7svWSm8f3ftJcK3a3QnSvDYsNp+P6tIPaILcFz4xyDT7CNIMRbq+YGxrVLLHA9oKO+J3Sm/r+ZkK2DldlvTo7mSyDWB+ewxgecsOp7DVagHF9W6ZWYqLuRH8e1SpQj3p1JcReE8YaUNPNhTF0wE7b6f9qeNvv2U5jGpBfoq4IFV9zZI6mBCMSeeWxRtwmFS8AxVy7qmc3YQnge2YPBGlpdj0B/73o44piyymnekffgmE5U0n3LnEg+HGueX+YQe3MT8pOW5ZM/R2ifX8nAJfxFZNqDYuBFetiEiYIywAyQe2APHQqqjAQrh1W4Fe4v+gkZ84uuEFRj2GphHByqADmrw=
+    api_key: $GITHUB_TOKEN
     file_glob: true
     file: build/*.deb
-    tag_name: $TRAVIS_TAG
-    target_commitish: $TRAVIS_COMMIT
     prerelease: true
     on:
       tags: true
