@@ -23,12 +23,17 @@ script:
   - cmake -Bbuild --build .
   - cd build && make pkcs11-daemon pkcs11-proxy
 
-deploy:
-  - provider: releases
-    skip_cleanup: true
-    api_key: $GITHUB_TOKEN
-    file_glob: true
-    file: build/*.deb
-    prerelease: true
-    on:
-      tags: true
+jobs:
+  include:
+    - stage: deploy
+      script: skip
+      compiler: clang
+      os: linux
+      deploy:
+        - provider: releases
+          token: $GITHUB_TOKEN
+          file_glob: true
+          file: *.deb
+          prerelease: true
+          on:
+            tags: true
