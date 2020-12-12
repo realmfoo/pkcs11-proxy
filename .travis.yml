@@ -35,6 +35,7 @@ jobs:
       os: linux
       deploy:
         provider: releases
+        skip_cleanup: true
         api_key: $GITHUB_TOKEN
         file_glob: true
         file: "*.deb"
