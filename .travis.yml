@@ -26,7 +26,11 @@ script:
 jobs:
   include:
     - stage: GitHub Release
-      script: cpack
+      script: 
+        - cmake -Bbuild --build .
+        - cd build
+        - make pkcs11-daemon pkcs11-proxy
+        - cpack
       compiler: clang
       os: linux
       deploy:
