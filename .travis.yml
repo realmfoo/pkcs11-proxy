@@ -29,10 +29,10 @@ jobs:
       script: cpack
       compiler: clang
       os: linux
-      deploy:
-        - provider: releases
-          api_key: $GITHUB_TOKEN
-          file_glob: true
-          file: *.deb
-          on:
-            tags: true
+#      deploy:
+#        - provider: releases
+#          api_key: $GITHUB_TOKEN
+#          file_glob: true
+#          file: *.deb
+#          on:
+#            tags: true
