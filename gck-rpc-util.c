@@ -212,10 +212,21 @@ int
 gck_rpc_has_ulong_parameter(CK_ATTRIBUTE_TYPE type)
 {
 	switch (type) {
-	case CKA_CLASS:
-	case CKA_KEY_TYPE:
 	case CKA_CERTIFICATE_TYPE:
+	case CKA_CLASS:
 	case CKA_HW_FEATURE_TYPE:
+	case CKA_KEY_TYPE:
+	case CKA_MODULUS_BITS:
+	case CKA_OTP_CHALLENGE_REQUIREMENT:
+	case CKA_OTP_COUNTER_REQUIREMENT:
+	case CKA_OTP_FORMAT:
+	case CKA_OTP_LENGTH:
+	case CKA_OTP_PIN_REQUIREMENT:
+	case CKA_OTP_TIME_REQUIREMENT:
+	case CKA_PRIME_BITS:
+	case CKA_SUBPRIME_BITS:
+	case CKA_VALUE_BITS:
+	case CKA_VALUE_LEN:
 		return 1;
 	default:
 		return 0;
