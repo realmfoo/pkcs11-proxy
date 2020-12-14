@@ -1,5 +1,8 @@
-pkcs11-proxy (0.2) unstable; urgency=low
+pkcs11-proxy (0.1.3) unstable; urgency=low
 
+  * Fix: update a list of ulong attributes
+  * Fix: do not try to unlink tcp-connection as a file
+  * Fix: fix C_GetMechanismList filtering out
   * Fix: call shutdown() before closing a socket
 
  -- Konstantin Leboev <konstantin.leboev@gmail.com>  Fri, 13 Nov 2020 16:26:10 +0300

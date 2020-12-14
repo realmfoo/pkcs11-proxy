@@ -4,12 +4,8 @@ if (COMMAND cmake_policy)
     cmake_policy(SET CMP0003 NEW)
 endif (COMMAND cmake_policy)
 
-project(pkcs11 C)
-
-set(VERSION "0.1.2")
-set(VERSION_MAJOR 0)
-set(VERSION_MINOR 1)
-set(VERSION_PATCH 2)
+project(pkcs11-proxy C)
+set(VERSION "0.1.3")
 
 set(CMAKE_C_STANDARD 99)
 set(PKCS11_PROXY_SRCS gck-rpc-module.c gck-rpc-message.c gck-rpc-util.c egg-buffer.c)
@@ -41,20 +37,28 @@ else ()
     target_link_libraries(pkcs11-daemon dl pthread)
     install(TARGETS pkcs11-proxy
             DESTINATION /usr/lib
-            COMPONENT proxy)
+            COMPONENT client)
     install(TARGETS pkcs11-daemon
             DESTINATION /usr/bin
-            COMPONENT daemon)
+            COMPONENT server)
 
     # Packaging
-    set(CPACK_SYSTEM_NAME "amd64")
     set(CPACK_GENERATOR "DEB")
     set(CPACK_PACKAGE_VERSION ${VERSION})
+
+    set(CPACK_DEB_COMPONENT_INSTALL ON)
+    set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
     set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Konstantin Leboev <konstantin.leboev@gmail.com")
     set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_SOURCE_DIR}/debian/changelog")
-    set(CPACK_DEB_COMPONENT_INSTALL ON)
 
-    set(CPACK_DEBIAN_PROXY_DESCRIPTION "PKCS#11 proxy client library")
-    set(CPACK_DEBIAN_DAEMON_DESCRIPTION "PKCS#11 proxy server daemon")
+    set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "PKCS#11 Proxy")
+    set(CPACK_DEBIAN_PACKAGE_SECTION "universe/net")
+
+    set(CPACK_COMPONENT_CLIENT_DESCRIPTION "PKCS#11 proxy client library")
+    set(CPACK_DEBIAN_CLIENT_FILE_NAME "pkcs11-proxy-client_${CPACK_PACKAGE_VERSION}_${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}.deb")
+
+    set(CPACK_COMPONENT_SERVER_DESCRIPTION "PKCS#11 proxy server")
+    set(CPACK_DEBIAN_SERVER_FILE_NAME "pkcs11-proxy-server_${CPACK_PACKAGE_VERSION}_${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}.deb")
+
     include(CPack)
 endif ()
