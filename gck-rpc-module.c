@@ -2366,7 +2366,6 @@ static CK_FUNCTION_LIST functionList = {
 
 CK_RV C_GetFunctionList(CK_FUNCTION_LIST_PTR_PTR list)
 {
-	printf("C_GetFunctionList\n");
 	return_val_if_fail(list, CKR_ARGUMENTS_BAD);
 
 	*list = &functionList;

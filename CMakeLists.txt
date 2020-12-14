@@ -5,7 +5,7 @@ if (COMMAND cmake_policy)
 endif (COMMAND cmake_policy)
 
 project(pkcs11-proxy C)
-set(VERSION "0.1.3")
+set(VERSION "0.1.4")
 
 set(CMAKE_C_STANDARD 99)
 set(PKCS11_PROXY_SRCS gck-rpc-module.c gck-rpc-message.c gck-rpc-util.c egg-buffer.c)

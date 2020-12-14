@@ -80,8 +80,6 @@ static pthread_mutex_t pkcs11_dispatchers_mutex = PTHREAD_MUTEX_INITIALIZER;
 /* -----------------------------------------------------------------------------
  * LOGGING and DEBUGGING
  */
-#undef DEBUG_OUTPUT
-#define DEBUG_OUTPUT 1
 #if DEBUG_OUTPUT
 #define debug(x) gck_rpc_debug x
 #else
