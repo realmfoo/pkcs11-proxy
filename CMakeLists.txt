@@ -6,6 +6,11 @@ endif (COMMAND cmake_policy)
 
 project(pkcs11 C)
 
+set(VERSION "0.1.2")
+set(VERSION_MAJOR 0)
+set(VERSION_MINOR 1)
+set(VERSION_PATCH 2)
+
 set(CMAKE_C_STANDARD 99)
 set(PKCS11_PROXY_SRCS gck-rpc-module.c gck-rpc-message.c gck-rpc-util.c egg-buffer.c)
 if (NOT WIN32)
@@ -14,6 +19,7 @@ endif ()
 
 add_definitions(-Wall)
 add_library(pkcs11-proxy SHARED ${PKCS11_PROXY_SRCS})
+set_target_properties(pkcs11-proxy PROPERTIES VERSION ${VERSION} SOVERSION 0)
 
 # Disable console when building Win32 binary in release mode
 if (WIN32)
@@ -28,8 +34,6 @@ if (NOT WIN32)
     add_executable(pkcs11-daemon ${GUI_TYPE} ${PKCS11_DAEMON_SRCS})
 endif ()
 
-set_target_properties(pkcs11-proxy PROPERTIES VERSION 0.1 SOVERSION 0)
-
 if (WIN32)
     target_link_libraries(pkcs11-proxy ws2_32)
 else ()
@@ -42,12 +46,15 @@ else ()
             DESTINATION /usr/bin
             COMPONENT daemon)
 
+    # Packaging
     set(CPACK_SYSTEM_NAME "amd64")
     set(CPACK_GENERATOR "DEB")
+    set(CPACK_PACKAGE_VERSION ${VERSION})
     set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Konstantin Leboev <konstantin.leboev@gmail.com")
     set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_SOURCE_DIR}/debian/changelog")
     set(CPACK_DEB_COMPONENT_INSTALL ON)
-#    set(CPACK_DEBIAN_PROXY_PACKAGE_NAME "pkcs11-proxy")
-#    set(CPACK_DEBIAN_DAEMON_PACKAGE_NAME "pkcs11-daemon")
+
+    set(CPACK_DEBIAN_PROXY_DESCRIPTION "PKCS#11 proxy client library")
+    set(CPACK_DEBIAN_DAEMON_DESCRIPTION "PKCS#11 proxy server daemon")
     include(CPack)
 endif ()
