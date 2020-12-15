@@ -28,7 +28,7 @@ jobs:
     - stage: GitHub Release
       if: tag =~ ^v
       script: 
-        - cmake -Bbuild --build .
+        - cmake -Bbuild --build -DCMAKE_BUILD_TYPE=Release .
         - cd build
         - make pkcs11-daemon pkcs11-proxy
         - cpack
