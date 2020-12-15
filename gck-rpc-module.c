@@ -549,7 +549,7 @@ static CK_RV call_lookup(CallState ** ret)
 }
 
 /* Perform the initial setup for a new call. */
-static CK_RV call_prepare(CallState * cs, int call_id)
+static CK_RV call_prepare(CallState * cs, uint32_t call_id)
 {
 	assert(cs);
 	assert(cs->call_status == CALL_READY);
@@ -1356,7 +1356,7 @@ static CK_RV rpc_C_Initialize(CK_VOID_PTR init_args)
 		}
 	}
 
-	srand(time(NULL) ^ pid);
+	srand((unsigned int) (time(NULL) ^ pid));
 	pkcs11_app_id = (uint64_t) rand() << 32 | rand();
 
 	/* Call through and initialize the daemon */

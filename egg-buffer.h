@@ -149,7 +149,7 @@ int		egg_buffer_get_uint16		(EggBuffer *buffer,
 
 int		egg_buffer_add_byte_array	(EggBuffer *buffer,
 						 const unsigned char *val,
-						 size_t len);
+						 uint32_t len);
 
 int		egg_buffer_get_byte_array	(EggBuffer *buffer,
 						 size_t offset,
@@ -158,7 +158,7 @@ int		egg_buffer_get_byte_array	(EggBuffer *buffer,
 						 size_t *vlen);
 
 unsigned char*  egg_buffer_add_byte_array_empty (EggBuffer *buffer,
-                                                 size_t vlen);
+                                                 uint32_t vlen);
 
 int             egg_buffer_add_string           (EggBuffer *buffer,
                                                  const char *str);

@@ -228,7 +228,7 @@ typedef enum _GckRpcMessageType {
 } GckRpcMessageType;
 
 typedef struct _GckRpcMessage {
-	int call_id;
+	uint32_t call_id;
 	GckRpcMessageType call_type;
 	const char *signature;
 	EggBuffer buffer;
@@ -250,7 +250,7 @@ int gck_rpc_message_equals(GckRpcMessage * m1, GckRpcMessage * m2);
 #define                  gck_rpc_message_buffer_error(msg)       (egg_buffer_has_error(&(msg)->buffer))
 
 int gck_rpc_message_prep(GckRpcMessage * msg,
-			 int call_id, GckRpcMessageType type);
+			 uint32_t call_id, GckRpcMessageType type);
 
 int gck_rpc_message_parse(GckRpcMessage * msg, GckRpcMessageType type);
 

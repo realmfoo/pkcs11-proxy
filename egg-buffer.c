@@ -223,7 +223,7 @@ egg_buffer_get_byte(EggBuffer * buffer, size_t offset,
 		buffer->failures++;
 		return 0;
 	}
-	ptr = (unsigned char *)buffer->buf + offset;
+	ptr = buffer->buf + offset;
 	if (val != NULL)
 		*val = *ptr;
 	if (next_offset != NULL)
@@ -259,7 +259,7 @@ int egg_buffer_set_uint16(EggBuffer * buffer, size_t offset, uint16_t val)
 		buffer->failures++;
 		return 0;
 	}
-	ptr = (unsigned char *)buffer->buf + offset;
+	ptr = buffer->buf + offset;
 	egg_buffer_encode_uint16(ptr, val);
 	return 1;
 }
@@ -273,7 +273,7 @@ egg_buffer_get_uint16(EggBuffer * buffer, size_t offset,
 		buffer->failures++;
 		return 0;
 	}
-	ptr = (unsigned char *)buffer->buf + offset;
+	ptr = buffer->buf + offset;
 	if (val != NULL)
 		*val = egg_buffer_decode_uint16(ptr);
 	if (next_offset != NULL)
@@ -311,7 +311,7 @@ int egg_buffer_set_uint32(EggBuffer * buffer, size_t offset, uint32_t val)
 		buffer->failures++;
 		return 0;
 	}
-	ptr = (unsigned char *)buffer->buf + offset;
+	ptr = buffer->buf + offset;
 	egg_buffer_encode_uint32(ptr, val);
 	return 1;
 }
@@ -325,7 +325,7 @@ egg_buffer_get_uint32(EggBuffer * buffer, size_t offset, size_t * next_offset,
 		buffer->failures++;
 		return 0;
 	}
-	ptr = (unsigned char *)buffer->buf + offset;
+	ptr = buffer->buf + offset;
 	if (val != NULL)
 		*val = egg_buffer_decode_uint32(ptr);
 	if (next_offset != NULL)
@@ -358,7 +358,7 @@ egg_buffer_get_uint64(EggBuffer * buffer, size_t offset,
 
 int
 egg_buffer_add_byte_array(EggBuffer * buffer, const unsigned char *val,
-			  size_t len)
+			  uint32_t len)
 {
 	if (val == NULL)
 		return egg_buffer_add_uint32(buffer, 0xffffffff);
@@ -371,7 +371,7 @@ egg_buffer_add_byte_array(EggBuffer * buffer, const unsigned char *val,
 	return egg_buffer_append(buffer, val, len);
 }
 
-unsigned char *egg_buffer_add_byte_array_empty(EggBuffer * buffer, size_t vlen)
+unsigned char *egg_buffer_add_byte_array_empty(EggBuffer * buffer, uint32_t vlen)
 {
 	if (vlen >= 0x7fffffff) {
 		buffer->failures++;

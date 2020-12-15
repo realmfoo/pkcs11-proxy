@@ -478,7 +478,7 @@ proto_read_attribute_array(CallState * cs, CK_ATTRIBUTE_PTR * result,
 			attrs[i].ulValueLen = value;
 		} else {
 			attrs[i].pValue = NULL;
-			attrs[i].ulValueLen = -1;
+			attrs[i].ulValueLen = 0;
 		}
 	}
 
@@ -2029,7 +2029,7 @@ static int dispatch_call(CallState * cs)
 
 static int read_all(int sock, unsigned char *data, size_t len)
 {
-	int r;
+	ssize_t r;
 
 	assert(sock >= 0);
 	assert(data);
@@ -2037,7 +2037,7 @@ static int read_all(int sock, unsigned char *data, size_t len)
 
 	while (len > 0) {
 
-                r = recv(sock, (void *)data, len, 0);
+		r = recv(sock, (void *) data, len, 0);
 
 		if (r == 0) {
 			/* Connection was closed on client */
@@ -2045,7 +2045,7 @@ static int read_all(int sock, unsigned char *data, size_t len)
 		} else if (r == -1) {
 			if (errno != EAGAIN && errno != EINTR) {
 				gck_rpc_warn("couldn't receive data: %s",
-					     strerror(errno));
+							 strerror(errno));
 				return 0;
 			}
 		} else {
@@ -2058,7 +2058,7 @@ static int read_all(int sock, unsigned char *data, size_t len)
 
 static int write_all(int sock, unsigned char *data, size_t len)
 {
-	int r;
+	ssize_t r;
 
 	assert(sock >= 0);
 	assert(data);
@@ -2066,7 +2066,7 @@ static int write_all(int sock, unsigned char *data, size_t len)
 
 	while (len > 0) {
 
-                r = send(sock, (void *)data, len, 0);
+		r = send(sock, (void *) data, len, 0);
 
 		if (r == -1) {
 			if (errno == EPIPE) {
@@ -2074,7 +2074,7 @@ static int write_all(int sock, unsigned char *data, size_t len)
 				return 0;
 			} else if (errno != EAGAIN && errno != EINTR) {
 				gck_rpc_warn("couldn't send data: %s",
-					     strerror(errno));
+							 strerror(errno));
 				return 0;
 			}
 		} else {

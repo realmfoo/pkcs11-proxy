@@ -83,7 +83,7 @@ void gck_rpc_message_reset(GckRpcMessage * msg)
 }
 
 int
-gck_rpc_message_prep(GckRpcMessage * msg, int call_id, GckRpcMessageType type)
+gck_rpc_message_prep(GckRpcMessage * msg, uint32_t call_id, GckRpcMessageType type)
 {
 	size_t len;
 
