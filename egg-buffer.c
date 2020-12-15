@@ -237,7 +237,7 @@ void egg_buffer_encode_uint16(unsigned char *buf, uint16_t val)
 	buf[1] = (val >> 0) & 0xff;
 }
 
-uint16_t egg_buffer_decode_uint16(unsigned char *buf)
+uint16_t egg_buffer_decode_uint16(const unsigned char *buf)
 {
 	uint16_t val = buf[0] << 8 | buf[1];
 	return val;
@@ -289,7 +289,7 @@ void egg_buffer_encode_uint32(unsigned char *buf, uint32_t val)
 	buf[3] = (val >> 0) & 0xff;
 }
 
-uint32_t egg_buffer_decode_uint32(unsigned char *ptr)
+uint32_t egg_buffer_decode_uint32(const unsigned char *ptr)
 {
 	uint32_t val = ptr[0] << 24 | ptr[1] << 16 | ptr[2] << 8 | ptr[3];
 	return val;

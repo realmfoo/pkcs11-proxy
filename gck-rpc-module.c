@@ -74,8 +74,8 @@ typedef int pid_t;
 	while (WaitForSingleObject(mx, 0) == WAIT_TIMEOUT)
 #define MUTEX_UNLOCK(mx) ReleaseMutex(mx)
 #else
-#define MUTEX_LOCK(mx) pthread_mutex_lock(&mx)
-#define MUTEX_UNLOCK(mx) pthread_mutex_unlock(&mx)
+#define MUTEX_LOCK(mx) pthread_mutex_lock(&(mx))
+#define MUTEX_UNLOCK(mx) pthread_mutex_unlock(&(mx))
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1
 typedef int SOCKET;
@@ -1157,37 +1157,37 @@ proto_read_sesssion_info(GckRpcMessage * msg, CK_SESSION_INFO_PTR info)
 		{ _ret = CKR_HOST_MEMORY; goto _cleanup; }
 
 #define IN_BYTE_BUFFER(arr, len) \
-	if (len == NULL) \
+	if ((len) == NULL) \
 		{ _ret = CKR_ARGUMENTS_BAD; goto _cleanup; } \
-	if (!gck_rpc_message_write_byte_buffer (_cs->req, arr ? *len : 0)) \
+	if (!gck_rpc_message_write_byte_buffer (_cs->req, (arr) ? *(len) : 0)) \
 		{ _ret = CKR_HOST_MEMORY; goto _cleanup; }
 
 #define IN_BYTE_ARRAY(arr, len) \
-	if (len != 0 && arr == NULL) \
+	if ((len) != 0 && (arr) == NULL) \
 		{ _ret = CKR_ARGUMENTS_BAD; goto _cleanup; } \
-	if (!gck_rpc_message_write_byte_array (_cs->req, arr, len)) \
+	if (!gck_rpc_message_write_byte_array (_cs->req, (arr), (len))) \
 		{ _ret = CKR_HOST_MEMORY; goto _cleanup; }
 
 #define IN_ULONG_BUFFER(arr, len) \
-	if (len == NULL) \
+	if ((len) == NULL) \
 		{ _ret = CKR_ARGUMENTS_BAD; goto _cleanup; } \
-	if (!gck_rpc_message_write_ulong_buffer (_cs->req, arr ? *len : 0)) \
+	if (!gck_rpc_message_write_ulong_buffer (_cs->req, (arr) ? *(len) : 0)) \
 		{ _ret = CKR_HOST_MEMORY; goto _cleanup; }
 
 #define IN_ULONG_ARRAY(arr, len) \
-	if (len != 0 && arr == NULL) \
+	if ((len) != 0 && (arr) == NULL) \
 		{ _ret = CKR_ARGUMENTS_BAD; goto _cleanup; }\
-	if (!gck_rpc_message_write_ulong_array (_cs->req, arr, len)) \
+	if (!gck_rpc_message_write_ulong_array (_cs->req, (arr), (len))) \
 		{ _ret = CKR_HOST_MEMORY; goto _cleanup; }
 
 #define IN_ATTRIBUTE_BUFFER(arr, num) \
-	if (num != 0 && arr == NULL) \
+	if (((num)) != 0 && (arr) == NULL) \
 		{ _ret = CKR_ARGUMENTS_BAD; goto _cleanup; } \
 	if (!gck_rpc_message_write_attribute_buffer (_cs->req, (arr), (num))) \
 		{ _ret = CKR_HOST_MEMORY; goto _cleanup; }
 
 #define IN_ATTRIBUTE_ARRAY(arr, num) \
-	if (num != 0 && arr == NULL) \
+	if ((num) != 0 && (arr) == NULL) \
 		{ _ret = CKR_ARGUMENTS_BAD; goto _cleanup; } \
 	if (!gck_rpc_message_write_attribute_array (_cs->req, (arr), (num))) \
 		{ _ret = CKR_HOST_MEMORY; goto _cleanup; }
@@ -1199,25 +1199,25 @@ proto_read_sesssion_info(GckRpcMessage * msg, CK_SESSION_INFO_PTR info)
 		{ _ret = CKR_HOST_MEMORY; goto _cleanup; }
 
 #define IN_MECHANISM(val) \
-	if (val == NULL) \
+	if ((val) == NULL) \
 		{ _ret = CKR_ARGUMENTS_BAD; goto _cleanup; } \
 	_ret = proto_write_mechanism (_cs->req, val); \
 	if (_ret != CKR_OK) goto _cleanup;
 
 #define OUT_ULONG(val) \
-	if (val == NULL) \
+	if ((val) == NULL) \
 		_ret = CKR_ARGUMENTS_BAD; \
 	if (_ret == CKR_OK && !gck_rpc_message_read_ulong (_cs->resp, val)) \
 		_ret = PARSE_ERROR;
 
 #define OUT_BYTE_ARRAY(arr, len)  \
-	if (len == NULL) \
+	if ((len) == NULL) \
 		_ret = CKR_ARGUMENTS_BAD; \
 	if (_ret == CKR_OK) \
 		_ret = proto_read_byte_array (_cs->resp, (arr), (len), *(len));
 
 #define OUT_ULONG_ARRAY(a, len) \
-	if (len == NULL) \
+	if ((len) == NULL) \
 		_ret = CKR_ARGUMENTS_BAD; \
 	if (_ret == CKR_OK) \
 		_ret = proto_read_ulong_array (_cs->resp, (a), (len), *(len));
@@ -1227,39 +1227,39 @@ proto_read_sesssion_info(GckRpcMessage * msg, CK_SESSION_INFO_PTR info)
 		_ret = proto_read_attribute_array (_cs->resp, (arr), (num));
 
 #define OUT_INFO(info) \
-	if (info == NULL) \
+	if ((info) == NULL) \
 		_ret = CKR_ARGUMENTS_BAD; \
 	if (_ret == CKR_OK) \
 		_ret = proto_read_info (_cs->resp, info);
 
 #define OUT_SLOT_INFO(info) \
-	if (info == NULL) \
+	if ((info) == NULL) \
 		_ret = CKR_ARGUMENTS_BAD; \
 	if (_ret == CKR_OK) \
 		_ret = proto_read_slot_info (_cs->resp, info);
 
 #define OUT_TOKEN_INFO(info) \
-	if (info == NULL) \
+	if ((info) == NULL) \
 		_ret = CKR_ARGUMENTS_BAD; \
 	if (_ret == CKR_OK) \
 		_ret = proto_read_token_info (_cs->resp, info);
 
 #define OUT_SESSION_INFO(info) \
-	if (info == NULL) \
+	if ((info) == NULL) \
 		_ret = CKR_ARGUMENTS_BAD; \
 	if (_ret == CKR_OK) \
 		_ret = proto_read_sesssion_info (_cs->resp, info);
 
 #define OUT_MECHANISM_TYPE_ARRAY(arr, len) \
-	if (len == NULL) \
+	if ((len) == NULL) \
 		_ret = CKR_ARGUMENTS_BAD; \
 	if (_ret == CKR_OK) \
 		_ret = proto_read_ulong_array (_cs->resp, (arr), (len), *(len)); \
-	if (_ret == CKR_OK && arr) \
+	if (_ret == CKR_OK && (arr)) \
 		gck_rpc_mechanism_list_purge (arr, len);
 
 #define OUT_MECHANISM_INFO(info) \
-	if (info == NULL) \
+	if ((info) == NULL) \
 		_ret = CKR_ARGUMENTS_BAD; \
 	if (_ret == CKR_OK) \
 		_ret = proto_read_mechanism_info (_cs->resp, info);

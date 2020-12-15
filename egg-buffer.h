@@ -116,7 +116,7 @@ int 		egg_buffer_get_byte		(EggBuffer *buffer,
 void 		egg_buffer_encode_uint32	(unsigned char* buf,
 						 uint32_t val);
 
-uint32_t	egg_buffer_decode_uint32	(unsigned char* buf);
+uint32_t	egg_buffer_decode_uint32	(const unsigned char* buf);
 
 int 		egg_buffer_add_uint32		(EggBuffer *buffer,
 						 uint32_t val);
@@ -133,7 +133,7 @@ int		egg_buffer_get_uint32		(EggBuffer *buffer,
 void 		egg_buffer_encode_uint16	(unsigned char* buf,
 						 uint16_t val);
 
-uint16_t	egg_buffer_decode_uint16	(unsigned char* buf);
+uint16_t	egg_buffer_decode_uint16	(const unsigned char* buf);
 
 int 		egg_buffer_add_uint16		(EggBuffer *buffer,
 						 uint16_t val);

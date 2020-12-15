@@ -710,39 +710,39 @@ static CK_RV proto_write_session_info(CallState * cs, CK_SESSION_INFO_PTR info)
 	}
 
 #define IN_BYTE(val) \
-	if (!gck_rpc_message_read_byte (cs->req, &val)) \
+	if (!gck_rpc_message_read_byte (cs->req, &(val))) \
 		{ _ret = PARSE_ERROR; goto _cleanup; }
 
 #define IN_ULONG(val) \
-	if (!gck_rpc_message_read_ulong (cs->req, &val)) \
+	if (!gck_rpc_message_read_ulong (cs->req, &(val))) \
 		{ _ret = PARSE_ERROR; goto _cleanup; }
 
 #define IN_STRING(val) \
-	_ret = proto_read_null_string (cs, &val); \
+	_ret = proto_read_null_string (cs, &(val)); \
 	if (_ret != CKR_OK) goto _cleanup;
 
 #define IN_BYTE_BUFFER(buffer, buffer_len) \
-	_ret = proto_read_byte_buffer (cs, &buffer, &buffer_len); \
+	_ret = proto_read_byte_buffer (cs, &(buffer), &(buffer_len)); \
 	if (_ret != CKR_OK) goto _cleanup;
 
 #define IN_BYTE_ARRAY(buffer, buffer_len) \
-	_ret = proto_read_byte_array (cs, &buffer, &buffer_len); \
+	_ret = proto_read_byte_array (cs, &(buffer), &(buffer_len)); \
 	if (_ret != CKR_OK) goto _cleanup;
 
 #define IN_ULONG_BUFFER(buffer, buffer_len) \
-	_ret = proto_read_ulong_buffer (cs, &buffer, &buffer_len); \
+	_ret = proto_read_ulong_buffer (cs, &(buffer), &(buffer_len)); \
 	if (_ret != CKR_OK) goto _cleanup;
 
 #define IN_ATTRIBUTE_BUFFER(buffer, buffer_len) \
-	_ret = proto_read_attribute_buffer (cs, &buffer, &buffer_len); \
+	_ret = proto_read_attribute_buffer (cs, &(buffer), &(buffer_len)); \
 	if (_ret != CKR_OK) goto _cleanup;
 
 #define IN_ATTRIBUTE_ARRAY(attrs, n_attrs) \
-	_ret = proto_read_attribute_array (cs, &attrs, &n_attrs); \
+	_ret = proto_read_attribute_array (cs, &(attrs), &(n_attrs)); \
 	if (_ret != CKR_OK) goto _cleanup;
 
 #define IN_MECHANISM(mech) \
-	_ret = proto_read_mechanism (cs, &mech); \
+	_ret = proto_read_mechanism (cs, &(mech)); \
 	if (_ret != CKR_OK) goto _cleanup;
 
 #define OUT_ULONG(val) \
@@ -763,23 +763,23 @@ static CK_RV proto_write_session_info(CallState * cs, CK_SESSION_INFO_PTR info)
 
 #define OUT_INFO(val) \
 	if (_ret == CKR_OK) \
-		_ret = proto_write_info (cs, &val);
+		_ret = proto_write_info (cs, &(val));
 
 #define OUT_SLOT_INFO(val) \
 	if (_ret == CKR_OK) \
-		_ret = proto_write_slot_info (cs, &val);
+		_ret = proto_write_slot_info (cs, &(val));
 
 #define OUT_TOKEN_INFO(val) \
 	if (_ret == CKR_OK) \
-		_ret = proto_write_token_info (cs, &val);
+		_ret = proto_write_token_info (cs, &(val));
 
 #define OUT_MECHANISM_INFO(val) \
 	if (_ret == CKR_OK) \
-		_ret = proto_write_mechanism_info (cs, &val);
+		_ret = proto_write_mechanism_info (cs, &(val));
 
 #define OUT_SESSION_INFO(val) \
 	if (_ret == CKR_OK) \
-		_ret = proto_write_session_info (cs, &val);
+		_ret = proto_write_session_info (cs, &(val));
 
 /* ---------------------------------------------------------------------------
  * DISPATCH SPECIFIC CALLS

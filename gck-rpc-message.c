@@ -85,7 +85,7 @@ void gck_rpc_message_reset(GckRpcMessage * msg)
 int
 gck_rpc_message_prep(GckRpcMessage * msg, int call_id, GckRpcMessageType type)
 {
-	int len;
+	size_t len;
 
 	assert(type);
 	assert(call_id >= GCK_RPC_CALL_ERROR);
@@ -206,13 +206,11 @@ int gck_rpc_message_equals(GckRpcMessage * m1, GckRpcMessage * m2)
 
 int gck_rpc_message_verify_part(GckRpcMessage * msg, const char *part)
 {
-	int len, ok;
-
 	if (!msg->sigverify)
 		return 1;
 
-	len = strlen(part);
-	ok = (strncmp(msg->sigverify, part, len) == 0);
+	size_t len = strlen(part);
+	int ok = (strncmp(msg->sigverify, part, len) == 0);
 	if (ok)
 		msg->sigverify += len;
 	return ok;
