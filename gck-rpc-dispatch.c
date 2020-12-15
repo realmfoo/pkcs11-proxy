@@ -2388,7 +2388,7 @@ void gck_rpc_layer_uninitialize(void)
 
 	/* Delete our unix socket */
 	if (pkcs11_socket_path[0] &&
-		strncmp(pkcs11_socket_path, "tcp://", strlen("tcp://")) != 0)
+		strncmp(pkcs11_socket_path, "tcp://", 6) != 0)
 		unlink(pkcs11_socket_path);
 	pkcs11_socket_path[0] = 0;
 
