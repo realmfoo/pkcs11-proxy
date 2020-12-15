@@ -26,6 +26,7 @@ script:
 jobs:
   include:
     - stage: GitHub Release
+      if: tag =~ ^v
       script: 
         - cmake -Bbuild --build .
         - cd build
@@ -40,5 +41,3 @@ jobs:
         file_glob: true
         file: "*.deb"
         prerelease: true
-        on:
-          tags: true
