@@ -124,7 +124,7 @@ gck_rpc_message_prep(GckRpcMessage * msg, uint32_t call_id, GckRpcMessageType ty
 int gck_rpc_message_parse(GckRpcMessage * msg, GckRpcMessageType type)
 {
 	const unsigned char *val;
-	size_t len;
+	uint32_t len;
 	uint32_t call_id;
 
 	msg->parsed = 0;
@@ -431,7 +431,7 @@ gck_rpc_message_read_space_string(GckRpcMessage * msg, CK_UTF8CHAR * buffer,
 				  CK_ULONG length)
 {
 	const unsigned char *data;
-	size_t n_data;
+	uint32_t n_data;
 
 	assert(msg);
 	assert(buffer);

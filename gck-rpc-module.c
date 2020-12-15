@@ -771,7 +771,7 @@ proto_read_attribute_array(GckRpcMessage * msg, CK_ATTRIBUTE_PTR arr,
 	uint32_t i, num, value, type;
 	CK_ATTRIBUTE_PTR attr;
 	const unsigned char *attrval;
-	size_t attrlen;
+	uint32_t attrlen;
 	unsigned char validity;
 	CK_RV ret;
 
@@ -895,7 +895,7 @@ proto_read_byte_array(GckRpcMessage * msg, CK_BYTE_PTR arr,
 {
 	const unsigned char *val;
 	unsigned char valid;
-	size_t vlen;
+	uint32_t vlen;
 
 	assert(len);
 	assert(msg);
@@ -912,7 +912,7 @@ proto_read_byte_array(GckRpcMessage * msg, CK_BYTE_PTR arr,
 	if (!valid) {
 		if (!egg_buffer_get_uint32
 		    (&msg->buffer, msg->parsed, &msg->parsed,
-		     (uint32_t *) & vlen))
+			 &vlen))
 			return PARSE_ERROR;
 
 		*len = vlen;

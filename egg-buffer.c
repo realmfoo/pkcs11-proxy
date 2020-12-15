@@ -385,7 +385,7 @@ unsigned char *egg_buffer_add_byte_array_empty(EggBuffer * buffer, uint32_t vlen
 int
 egg_buffer_get_byte_array(EggBuffer * buffer, size_t offset,
 			  size_t * next_offset, const unsigned char **val,
-			  size_t * vlen)
+			  uint32_t * vlen)
 {
 	uint32_t len;
 	if (!egg_buffer_get_uint32(buffer, offset, &offset, &len))

@@ -221,7 +221,7 @@ proto_read_byte_array(CallState * cs, CK_BYTE_PTR * array, CK_ULONG * n_array)
 	GckRpcMessage *msg;
 	const unsigned char *data;
 	unsigned char valid;
-	size_t n_data;
+	uint32_t n_data;
 
 	assert(cs);
 
@@ -413,7 +413,7 @@ proto_read_attribute_array(CallState * cs, CK_ATTRIBUTE_PTR * result,
 	GckRpcMessage *msg;
 	uint32_t n_attrs, i;
 	uint32_t value;
-	size_t n_data;
+	uint32_t n_data;
 
 	assert(cs);
 	assert(result);
@@ -522,7 +522,7 @@ static CK_RV proto_read_null_string(CallState * cs, CK_UTF8CHAR_PTR * val)
 {
 	GckRpcMessage *msg;
 	const unsigned char *data;
-	size_t n_data;
+	uint32_t n_data;
 
 	assert(cs);
 	assert(val);
@@ -552,7 +552,7 @@ static CK_RV proto_read_mechanism(CallState * cs, CK_MECHANISM_PTR mech)
 	GckRpcMessage *msg;
 	const unsigned char *data;
 	uint32_t value;
-	size_t n_data;
+	uint32_t n_data;
 
 	assert(cs);
 	assert(mech);

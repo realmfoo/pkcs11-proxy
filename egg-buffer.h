@@ -155,7 +155,7 @@ int		egg_buffer_get_byte_array	(EggBuffer *buffer,
 						 size_t offset,
 						 size_t *next_offset,
 						 const unsigned char **val,
-						 size_t *vlen);
+						 uint32_t *vlen);
 
 unsigned char*  egg_buffer_add_byte_array_empty (EggBuffer *buffer,
                                                  uint32_t vlen);
