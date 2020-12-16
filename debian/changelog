@@ -1,3 +1,15 @@
+pkcs11-proxy (0.1.6) unstable; urgency=low
+
+  * Fix: passing mechanism parameter CK_KEY_DERIVATION_STRING_DATA
+
+ -- Konstantin Leboev <konstantin.leboev@gmail.com>  Fri, 13 Nov 2020 16:26:10 +0300
+
+pkcs11-proxy (0.1.5) unstable; urgency=low
+
+  * Fix: clang-tidy inspections
+
+ -- Konstantin Leboev <konstantin.leboev@gmail.com>  Fri, 13 Nov 2020 16:26:10 +0300
+
 pkcs11-proxy (0.1.4) unstable; urgency=low
 
   * Fix: Remove a forgotten debug printf

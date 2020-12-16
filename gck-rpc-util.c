@@ -98,12 +98,30 @@ int gck_rpc_mechanism_has_sane_parameters(CK_MECHANISM_TYPE type)
 	case CKM_RSA_PKCS_PSS:
 	case CKM_SHA1_RSA_PKCS_PSS:
 	case CKM_AES_CBC_PAD:
+	case CKM_AES_KEY_WRAP:
+	case CKM_AES_KEY_WRAP_PAD:
 	case CKM_CONCATENATE_BASE_AND_KEY:
-	case CKM_CONCATENATE_BASE_AND_DATA:
-	case CKM_CONCATENATE_DATA_AND_BASE:
 		return 1;
 	default:
 		return 0;
+	}
+}
+
+int gck_rpc_mechanism_has_key_derivation_string_data(CK_MECHANISM_TYPE type)
+{
+	switch (type) {
+		case CKM_DES_ECB_ENCRYPT_DATA:
+		case CKM_DES3_ECB_ENCRYPT_DATA:
+		case CKM_AES_ECB_ENCRYPT_DATA:
+		case CKM_CAMELLIA_ECB_ENCRYPT_DATA:
+		case CKM_ARIA_ECB_ENCRYPT_DATA:
+		case CKM_SEED_ECB_ENCRYPT_DATA:
+		case CKM_CONCATENATE_BASE_AND_DATA:
+		case CKM_CONCATENATE_DATA_AND_BASE:
+		case CKM_XOR_BASE_AND_DATA:
+			return 1;
+		default:
+			return 0;
 	}
 }
 

@@ -321,6 +321,7 @@ int gck_rpc_mechanism_is_supported(CK_MECHANISM_TYPE mech);
 void gck_rpc_mechanism_list_purge(CK_MECHANISM_TYPE_PTR mechs,
 				  CK_ULONG_PTR n_mechs);
 int gck_rpc_mechanism_has_sane_parameters(CK_MECHANISM_TYPE type);
+int gck_rpc_mechanism_has_key_derivation_string_data(CK_MECHANISM_TYPE type);
 int gck_rpc_mechanism_has_no_parameters(CK_MECHANISM_TYPE mech);
 int gck_rpc_has_bad_sized_ulong_parameter(CK_ATTRIBUTE_PTR attr);
 int gck_rpc_has_ulong_parameter(CK_ATTRIBUTE_TYPE type);

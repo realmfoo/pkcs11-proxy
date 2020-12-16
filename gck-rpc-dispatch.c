@@ -572,6 +572,17 @@ static CK_RV proto_read_mechanism(CallState * cs, CK_MECHANISM_PTR mech)
 	    (&msg->buffer, msg->parsed, &msg->parsed, &data, &n_data))
 		return PARSE_ERROR;
 
+	if (data != NULL && gck_rpc_mechanism_has_key_derivation_string_data(value)) {
+		CK_KEY_DERIVATION_STRING_DATA_PTR dataPtr = call_alloc(cs, sizeof(CK_KEY_DERIVATION_STRING_DATA));
+		if (!dataPtr)
+			return CKR_DEVICE_MEMORY;
+
+		dataPtr->pData = (CK_BYTE_PTR) data;
+		dataPtr->ulLen = n_data;
+		data = (const unsigned char *) dataPtr;
+		n_data = sizeof(CK_KEY_DERIVATION_STRING_DATA);
+	}
+
 	mech->mechanism = value;
 	mech->pParameter = (CK_VOID_PTR) data;
 	mech->ulParameterLen = n_data;

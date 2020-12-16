@@ -1021,7 +1021,14 @@ static CK_RV proto_write_mechanism(GckRpcMessage * msg, CK_MECHANISM_PTR mech)
 	else if (gck_rpc_mechanism_has_sane_parameters(mech->mechanism))
 		egg_buffer_add_byte_array(&msg->buffer, mech->pParameter,
 					  mech->ulParameterLen);
-	else
+	else if (gck_rpc_mechanism_has_key_derivation_string_data(mech->mechanism)) {
+		CK_KEY_DERIVATION_STRING_DATA_PTR dataPtr = mech->pParameter;
+		if (dataPtr == NULL) {
+			egg_buffer_add_byte_array(&msg->buffer, NULL, 0);
+		} else {
+			egg_buffer_add_byte_array(&msg->buffer, dataPtr->pData, (uint32_t) dataPtr->ulLen);
+		}
+	} else
 		return CKR_MECHANISM_INVALID;
 
 	return egg_buffer_has_error(&msg->buffer) ? CKR_HOST_MEMORY : CKR_OK;
