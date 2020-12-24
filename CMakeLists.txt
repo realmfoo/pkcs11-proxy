@@ -14,8 +14,8 @@ if (NOT WIN32)
 endif ()
 
 add_definitions(-Wall)
-add_library(pkcs11-proxy SHARED ${PKCS11_PROXY_SRCS})
-set_target_properties(pkcs11-proxy PROPERTIES VERSION ${VERSION} SOVERSION 0)
+add_library(libpkcs11-proxy SHARED ${PKCS11_PROXY_SRCS})
+set_target_properties(libpkcs11-proxy PROPERTIES VERSION ${VERSION} SOVERSION 0)
 
 # Disable console when building Win32 binary in release mode
 if (WIN32)
@@ -31,11 +31,11 @@ if (NOT WIN32)
 endif ()
 
 if (WIN32)
-    target_link_libraries(pkcs11-proxy ws2_32)
+    target_link_libraries(libpkcs11-proxy ws2_32)
 else ()
-    target_link_libraries(pkcs11-proxy pthread)
+    target_link_libraries(libpkcs11-proxy pthread)
     target_link_libraries(pkcs11-daemon dl pthread)
-    install(TARGETS pkcs11-proxy
+    install(TARGETS libpkcs11-proxy
             DESTINATION /usr/lib
             COMPONENT client)
     install(TARGETS pkcs11-daemon
@@ -50,14 +50,17 @@ else ()
     set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
     set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Konstantin Leboev <konstantin.leboev@gmail.com")
     set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_SOURCE_DIR}/debian/changelog")
+    set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_SOURCE_DIR}/debian/copyright")
 
     set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "PKCS#11 Proxy")
     set(CPACK_DEBIAN_PACKAGE_SECTION "universe/net")
 
     set(CPACK_COMPONENT_CLIENT_DESCRIPTION "PKCS#11 proxy client library")
-    set(CPACK_DEBIAN_CLIENT_FILE_NAME "pkcs11-proxy-client_${CPACK_PACKAGE_VERSION}_${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}.deb")
+    set(CPACK_DEBIAN_CLIENT_PACKAGE_NAME "libpkcs11-proxy")
+    set(CPACK_DEBIAN_CLIENT_FILE_NAME "libpkcs11-proxy_${CPACK_PACKAGE_VERSION}_${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}.deb")
 
     set(CPACK_COMPONENT_SERVER_DESCRIPTION "PKCS#11 proxy server")
+    set(CPACK_DEBIAN_SERVER_PACKAGE_NAME "pkcs11-proxy-server")
     set(CPACK_DEBIAN_SERVER_FILE_NAME "pkcs11-proxy-server_${CPACK_PACKAGE_VERSION}_${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}.deb")
 
     include(CPack)

@@ -21,7 +21,7 @@ arch:
 
 script:
   - cmake -Bbuild --build .
-  - cd build && make pkcs11-daemon pkcs11-proxy
+  - cd build && make
 
 jobs:
   include:
@@ -30,7 +30,7 @@ jobs:
       script: 
         - cmake -Bbuild --build -DCMAKE_BUILD_TYPE=Release .
         - cd build
-        - make pkcs11-daemon pkcs11-proxy
+        - make
         - cpack
       compiler: clang
       os: linux
