@@ -32,7 +32,7 @@ For demonstration purposes, however, security is not a consideration.
     Enter user PIN:
     The token has been initialized.
     
-    $ PKCS11_DAEMON_SOCKET="tcp://127.0.0.1:2345" pkcs11-daemon /usr/lib/libsofthsm.so
+    $ PKCS11_DAEMON_SOCKET="tcp://127.0.0.1:2345" pkcs11-proxy /usr/lib/libsofthsm.so
     $ PKCS11_PROXY_SOCKET="tcp://127.0.0.1:2345" pkcs11-tool --module=/usr/lib/libpkcs11-proxy.so -L Available
     slots: Slot 0           SoftHSM
       token label:   test token manuf:   SoftHSM token model:   SoftHSM
