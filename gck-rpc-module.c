@@ -2275,7 +2275,7 @@ rpc_C_GenerateRandom(CK_SESSION_HANDLE session, CK_BYTE_PTR random_data,
 {
 	BEGIN_CALL(C_GenerateRandom);
 	IN_ULONG(session);
-	IN_BYTE_BUFFER(random_data, &random_len);
+	IN_ULONG(random_len);
 	PROCESS_CALL;
 	OUT_BYTE_ARRAY(random_data, &random_len);
 	END_CALL;

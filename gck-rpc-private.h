@@ -207,7 +207,7 @@ static const GckRpcCall gck_rpc_calls[] = {
 	{GCK_RPC_CALL_C_UnwrapKey, "C_UnwrapKey", "uMuayaA", "u"},
 	{GCK_RPC_CALL_C_DeriveKey, "C_DeriveKey", "uMuaA", "u"},
 	{GCK_RPC_CALL_C_SeedRandom, "C_SeedRandom", "uay", ""},
-	{GCK_RPC_CALL_C_GenerateRandom, "C_GenerateRandom", "ufy", "ay"},
+	{GCK_RPC_CALL_C_GenerateRandom, "C_GenerateRandom", "uu", "ay"},
 };
 
 #ifdef _DEBUG

@@ -1881,7 +1881,12 @@ static CK_RV rpc_C_GenerateRandom(CallState * cs)
 
 	BEGIN_CALL(C_GenerateRandom);
 	IN_ULONG(session);
-	IN_BYTE_BUFFER(random_data, random_len);
+	IN_ULONG(random_len);
+	random_data = call_alloc(cs, random_len);
+	if (!random_data) {
+		_ret = CKR_DEVICE_MEMORY;
+		goto _cleanup;
+	}
 	PROCESS_CALL((session, random_data, random_len));
 	OUT_BYTE_ARRAY(random_data, random_len);
 	END_CALL;
